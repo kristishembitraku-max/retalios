@@ -6,43 +6,59 @@ import {
 
 // ─── THEME ───────────────────────────────────────────────────────────────────
 const G = {
-  bg: "#07070f", card: "#0d0d1a", border: "#1a1a2e",
-  accent: "#e63946", accentDim: "#e6394612", accentBorder: "#e6394640",
-  gold: "#f0c040", goldDim: "#f0c04012", goldBorder: "#f0c04040",
-  green: "#22c55e", greenDim: "#22c55e12", greenBorder: "#22c55e40",
+  bg: "#04040d", card: "#0a0a18", border: "#1a1a35",
+  accent: "#e63946", accentDim: "#e6394612", accentBorder: "#e6394650",
+  gold: "#f0c040", goldDim: "#f0c04012", goldBorder: "#f0c04050",
+  green: "#22c55e", greenDim: "#22c55e12", greenBorder: "#22c55e50",
   blue: "#60a5fa", blueDim: "#60a5fa12",
   purple: "#a78bfa", purpleDim: "#a78bfa12",
-  text: "#e8e8f2", muted: "#6b6b90", dim: "#1c1c2e", border2: "#22223a",
+  text: "#eeeef8", muted: "#5a5a80", dim: "#12122a", border2: "#22223a",
+};
+
+const GLASS = {
+  background: "rgba(10,10,28,0.65)",
+  backdropFilter: "blur(24px)",
+  WebkitBackdropFilter: "blur(24px)",
+  border: "1px solid rgba(255,255,255,0.06)",
+  boxShadow: "0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)",
 };
 
 const sx = {
   card: {
-    background: G.card, border: `1px solid ${G.border}`, borderRadius: 14,
+    ...GLASS, borderRadius: 18,
     padding: "1.25rem 1.4rem",
+    transition: "box-shadow 0.25s, border-color 0.25s",
   },
   btn: (color = G.accent) => ({
-    background: color, border: "none", borderRadius: 8, cursor: "pointer",
+    background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+    border: "none", borderRadius: 10, cursor: "pointer",
     color: "#000", fontWeight: 700, fontSize: "0.82rem",
     padding: "0.5rem 1.1rem", letterSpacing: "0.03em",
+    boxShadow: `0 0 20px ${color}40`,
+    transition: "box-shadow 0.2s, transform 0.15s",
   }),
   btnGhost: {
-    background: "transparent", border: `1px solid ${G.border}`, borderRadius: 8,
-    cursor: "pointer", color: G.muted, fontWeight: 600, fontSize: "0.82rem",
-    padding: "0.5rem 1.1rem",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: 10, cursor: "pointer", color: G.muted,
+    fontWeight: 600, fontSize: "0.82rem", padding: "0.5rem 1.1rem",
+    transition: "all 0.2s",
   },
   tag: (color) => ({
-    background: color + "18", color, border: `1px solid ${color}40`,
+    background: color + "18", color, border: `1px solid ${color}50`,
     borderRadius: 6, padding: "0.18rem 0.6rem", fontSize: "0.72rem", fontWeight: 700,
-    display: "inline-block",
+    display: "inline-block", boxShadow: `0 0 8px ${color}20`,
   }),
   input: {
-    background: G.dim, border: `1px solid ${G.border}`, borderRadius: 8,
-    color: G.text, padding: "0.55rem 0.9rem", fontSize: "0.85rem", outline: "none",
-    width: "100%",
+    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 10, color: G.text, padding: "0.55rem 0.9rem",
+    fontSize: "0.85rem", outline: "none", width: "100%",
+    transition: "border-color 0.2s, box-shadow 0.2s",
   },
   select: {
-    background: G.dim, border: `1px solid ${G.border}`, borderRadius: 8,
-    color: G.text, padding: "0.55rem 0.9rem", fontSize: "0.85rem", outline: "none",
+    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 10, color: G.text, padding: "0.55rem 0.9rem",
+    fontSize: "0.85rem", outline: "none",
   },
 };
 
@@ -282,10 +298,19 @@ async function callClaudeAPI(apiKey, prompt, niche, contentType) {
 
 // ─── SMALL COMPONENTS ────────────────────────────────────────────────────────
 const Stat = ({ label, value, sub, color = G.text }) => (
-  <div style={{ ...sx.card, minWidth: 140 }}>
-    <div style={{ fontSize: "0.72rem", color: G.muted, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
-    <div style={{ fontSize: "1.7rem", fontWeight: 800, color, lineHeight: 1.1 }}>{value}</div>
-    {sub && <div style={{ fontSize: "0.72rem", color: G.muted, marginTop: 4 }}>{sub}</div>}
+  <div style={{
+    ...sx.card, minWidth: 148,
+    borderColor: color + "25",
+    boxShadow: `0 8px 40px rgba(0,0,0,0.5), 0 0 30px ${color}10, inset 0 1px 0 rgba(255,255,255,0.04)`,
+  }}>
+    <div style={{ fontSize: "0.68rem", color: G.muted, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.12em" }}>{label}</div>
+    <div style={{
+      fontSize: "1.9rem", fontWeight: 800, lineHeight: 1.1,
+      background: `linear-gradient(135deg, ${color}, ${color}99)`,
+      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+      backgroundClip: "text",
+    }}>{value}</div>
+    {sub && <div style={{ fontSize: "0.7rem", color: G.muted, marginTop: 5 }}>{sub}</div>}
   </div>
 );
 
@@ -294,12 +319,24 @@ const Badge = ({ text, color = G.muted }) => (
 );
 
 const SectionHeader = ({ icon, title, sub }) => (
-  <div style={{ marginBottom: "1.6rem" }}>
-    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-      <span style={{ fontSize: "1.3rem" }}>{icon}</span>
-      <h2 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 800, color: G.text }}>{title}</h2>
+  <div style={{ marginBottom: "1.8rem" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
+      <div style={{
+        width: 38, height: 38, borderRadius: 10,
+        background: "rgba(255,255,255,0.05)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: "1.1rem",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+      }}>{icon}</div>
+      <h2 style={{
+        margin: 0, fontSize: "1.4rem", fontWeight: 800,
+        background: "linear-gradient(135deg, #eeeef8 0%, #9090b8 100%)",
+        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+      }}>{title}</h2>
     </div>
-    {sub && <p style={{ margin: 0, color: G.muted, fontSize: "0.85rem" }}>{sub}</p>}
+    {sub && <p style={{ margin: 0, color: G.muted, fontSize: "0.83rem", paddingLeft: 50 }}>{sub}</p>}
   </div>
 );
 
@@ -1092,64 +1129,135 @@ export default function GhostOpDashboard() {
   const [queue, setQueue] = useState([]);
 
   return (
-    <div style={{ display:"flex", minHeight:"100vh", background:G.bg, color:G.text, fontFamily:'"Inter", "Segoe UI", system-ui, sans-serif' }}>
+    <div style={{ display:"flex", minHeight:"100vh", background:G.bg, color:G.text, fontFamily:'"Inter","Segoe UI",system-ui,sans-serif', position:"relative", overflow:"hidden" }}>
 
-      {/* Sidebar */}
-      <div style={{ width:220, background:G.card, borderRight:`1px solid ${G.border}`, display:"flex", flexDirection:"column", flexShrink:0 }}>
-        <div style={{ padding:"1.4rem 1.2rem", borderBottom:`1px solid ${G.border}` }}>
-          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
-            <div style={{ width:28, height:28, background:G.accent, borderRadius:6, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"0.9rem", fontWeight:800, color:"#000" }}>G</div>
+      {/* ── Global CSS ── */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap');
+        *, *::before, *::after { box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+        input:focus, select:focus, textarea:focus { outline: none !important; border-color: rgba(230,57,70,0.5) !important; box-shadow: 0 0 0 3px rgba(230,57,70,0.1) !important; }
+        button:active { transform: scale(0.97) !important; }
+
+        @keyframes orb1 {
+          0%,100% { transform: translate(0,0) scale(1); }
+          33%      { transform: translate(60px,-80px) scale(1.08); }
+          66%      { transform: translate(-40px,50px) scale(0.94); }
+        }
+        @keyframes orb2 {
+          0%,100% { transform: translate(0,0) scale(1); }
+          33%      { transform: translate(-70px,60px) scale(1.06); }
+          66%      { transform: translate(50px,-40px) scale(0.96); }
+        }
+        @keyframes orb3 {
+          0%,100% { transform: translate(0,0) scale(1); }
+          50%      { transform: translate(40px,60px) scale(1.04); }
+        }
+        @keyframes fadeUp {
+          from { opacity:0; transform:translateY(22px); }
+          to   { opacity:1; transform:none; }
+        }
+        @keyframes glowPulse {
+          0%,100% { box-shadow: 0 0 20px rgba(230,57,70,0.3); }
+          50%      { box-shadow: 0 0 40px rgba(230,57,70,0.6); }
+        }
+        @keyframes shimmer {
+          0%   { background-position: -300% center; }
+          100% { background-position: 300% center; }
+        }
+        .ghost-nav-btn:hover { background: rgba(255,255,255,0.05) !important; color: #eeeef8 !important; }
+        .ghost-card:hover { border-color: rgba(255,255,255,0.12) !important; box-shadow: 0 12px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06) !important; transform: translateY(-1px); }
+        .ghost-btn-primary:hover { box-shadow: 0 0 35px rgba(230,57,70,0.6) !important; transform: translateY(-1px); }
+      `}</style>
+
+      {/* ── Floating Orbs Background ── */}
+      <div style={{ position:"fixed", inset:0, zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
+        <div style={{ position:"absolute", width:700, height:700, borderRadius:"50%", background:"radial-gradient(circle, rgba(230,57,70,0.12) 0%, transparent 65%)", top:"-250px", left:"-150px", animation:"orb1 28s ease-in-out infinite" }} />
+        <div style={{ position:"absolute", width:600, height:600, borderRadius:"50%", background:"radial-gradient(circle, rgba(167,139,250,0.10) 0%, transparent 65%)", bottom:"-200px", right:"-100px", animation:"orb2 35s ease-in-out infinite" }} />
+        <div style={{ position:"absolute", width:500, height:500, borderRadius:"50%", background:"radial-gradient(circle, rgba(240,192,64,0.07) 0%, transparent 65%)", top:"40%", left:"35%", animation:"orb3 22s ease-in-out infinite 4s" }} />
+        <div style={{ position:"absolute", width:400, height:400, borderRadius:"50%", background:"radial-gradient(circle, rgba(96,165,250,0.08) 0%, transparent 65%)", top:"10%", right:"15%", animation:"orb1 32s ease-in-out infinite 8s" }} />
+        {/* subtle grid overlay */}
+        <div style={{ position:"absolute", inset:0, backgroundImage:"linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)", backgroundSize:"60px 60px" }} />
+      </div>
+
+      {/* ── Sidebar ── */}
+      <div style={{ width:230, display:"flex", flexDirection:"column", flexShrink:0, position:"relative", zIndex:10, ...GLASS, borderRight:"1px solid rgba(255,255,255,0.06)", borderRadius:0 }}>
+
+        {/* Logo */}
+        <div style={{ padding:"1.8rem 1.4rem 1.2rem", borderBottom:"1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:12 }}>
+            <div style={{
+              width:36, height:36, borderRadius:10,
+              background:"linear-gradient(135deg, #e63946, #c0202e)",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              fontSize:"1rem", fontWeight:900, color:"#fff",
+              boxShadow:"0 0 24px rgba(230,57,70,0.5)",
+              animation:"glowPulse 3s ease-in-out infinite",
+            }}>G</div>
             <div>
-              <div style={{ fontWeight:800, fontSize:"0.95rem", color:G.text, lineHeight:1 }}>Ghost Op</div>
-              <div style={{ fontSize:"0.62rem", color:G.muted, letterSpacing:"0.1em" }}>ANONYMOUS INCOME</div>
+              <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize:"1.05rem", color:G.text, lineHeight:1, letterSpacing:"0.02em" }}>Ghost Op</div>
+              <div style={{ fontSize:"0.58rem", color:G.muted, letterSpacing:"0.14em", marginTop:2 }}>ANONYMOUS INCOME</div>
             </div>
           </div>
           {apiKey && (
-            <div style={{ background:G.greenDim, border:`1px solid ${G.greenBorder}`, borderRadius:6, padding:"0.25rem 0.5rem", fontSize:"0.65rem", color:G.green, marginTop:8 }}>
-              ● Claude API connected
+            <div style={{ background:"rgba(34,197,94,0.1)", border:"1px solid rgba(34,197,94,0.25)", borderRadius:8, padding:"0.3rem 0.65rem", fontSize:"0.65rem", color:G.green, display:"flex", alignItems:"center", gap:5 }}>
+              <span style={{ width:6, height:6, borderRadius:"50%", background:G.green, display:"inline-block", boxShadow:"0 0 6px #22c55e" }} />
+              Claude API connected
             </div>
           )}
           {selectedNiche && (
-            <div style={{ background:G.goldDim, border:`1px solid ${G.goldBorder}`, borderRadius:6, padding:"0.25rem 0.5rem", fontSize:"0.65rem", color:G.gold, marginTop:4 }}>
+            <div style={{ background:"rgba(240,192,64,0.08)", border:"1px solid rgba(240,192,64,0.2)", borderRadius:8, padding:"0.28rem 0.65rem", fontSize:"0.65rem", color:G.gold, marginTop:6 }}>
               {selectedNiche.emoji} {selectedNiche.name}
             </div>
           )}
         </div>
 
-        <nav style={{ flex:1, padding:"0.8rem 0" }}>
-          {NAV.map(n => (
-            <button key={n.id} onClick={() => setSection(n.id)}
-              style={{
-                display:"flex", alignItems:"center", gap:10, width:"100%",
-                padding:"0.65rem 1.2rem", background: section === n.id ? G.accent+"18" : "transparent",
-                border:"none", borderLeft: section === n.id ? `3px solid ${G.accent}` : "3px solid transparent",
-                color: section === n.id ? G.text : G.muted, cursor:"pointer",
-                fontSize:"0.82rem", fontWeight: section === n.id ? 700 : 400,
-                transition:"all 0.12s",
-              }}>
-              <span style={{ fontSize:"0.9rem" }}>{n.icon}</span>
-              {n.label}
-            </button>
-          ))}
+        {/* Nav */}
+        <nav style={{ flex:1, padding:"0.8rem 0.6rem" }}>
+          {NAV.map(n => {
+            const active = section === n.id;
+            return (
+              <button key={n.id} onClick={() => setSection(n.id)} className="ghost-nav-btn"
+                style={{
+                  display:"flex", alignItems:"center", gap:10, width:"100%",
+                  padding:"0.7rem 0.9rem", marginBottom:2,
+                  background: active ? "rgba(230,57,70,0.12)" : "transparent",
+                  border: active ? "1px solid rgba(230,57,70,0.25)" : "1px solid transparent",
+                  borderRadius:10,
+                  color: active ? G.text : G.muted,
+                  cursor:"pointer", fontSize:"0.83rem", fontWeight: active ? 700 : 400,
+                  transition:"all 0.18s", textAlign:"left",
+                  boxShadow: active ? "0 0 20px rgba(230,57,70,0.1)" : "none",
+                }}>
+                <span style={{ fontSize:"0.95rem", width:20, textAlign:"center" }}>{n.icon}</span>
+                {n.label}
+                {active && <span style={{ marginLeft:"auto", width:5, height:5, borderRadius:"50%", background:G.accent, boxShadow:"0 0 8px #e63946" }} />}
+              </button>
+            );
+          })}
         </nav>
 
-        <div style={{ padding:"0.8rem 1.2rem", borderTop:`1px solid ${G.border}` }}>
-          <div style={{ fontSize:"0.62rem", color:G.muted, lineHeight:1.5 }}>
-            Ghost Operation v1.0<br/>
-            All data stored locally.
+        <div style={{ padding:"1rem 1.4rem", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ fontSize:"0.6rem", color:G.muted, lineHeight:1.7, letterSpacing:"0.04em" }}>
+            GHOST OPERATION v1.0<br/>
+            <span style={{ color:"rgba(255,255,255,0.15)" }}>All data stored locally.</span>
           </div>
         </div>
       </div>
 
-      {/* Main content */}
-      <div style={{ flex:1, padding:"2rem", overflow:"auto" }}>
-        {section === "mission"      && <MissionControl queue={queue} />}
-        {section === "niche"        && <NicheIntelligence selectedNiche={selectedNiche} setSelectedNiche={setSelectedNiche} />}
-        {section === "content"      && <ContentFactory apiKey={apiKey} selectedNiche={selectedNiche} queue={queue} setQueue={setQueue} />}
-        {section === "monetization" && <MonetizationHub />}
-        {section === "blueprint"    && <Blueprint />}
-        {section === "platforms"    && <PlatformEngine />}
-        {section === "settings"     && <GhostSettings apiKey={apiKey} setApiKey={setApiKey} />}
+      {/* ── Main Content ── */}
+      <div style={{ flex:1, padding:"2.5rem", overflow:"auto", position:"relative", zIndex:5 }}>
+        <div style={{ animation:"fadeUp 0.4s ease", maxWidth:1200 }} key={section}>
+          {section === "mission"      && <MissionControl queue={queue} />}
+          {section === "niche"        && <NicheIntelligence selectedNiche={selectedNiche} setSelectedNiche={setSelectedNiche} />}
+          {section === "content"      && <ContentFactory apiKey={apiKey} selectedNiche={selectedNiche} queue={queue} setQueue={setQueue} />}
+          {section === "monetization" && <MonetizationHub />}
+          {section === "blueprint"    && <Blueprint />}
+          {section === "platforms"    && <PlatformEngine />}
+          {section === "settings"     && <GhostSettings apiKey={apiKey} setApiKey={setApiKey} />}
+        </div>
       </div>
     </div>
   );
