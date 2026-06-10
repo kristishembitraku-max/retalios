@@ -1085,7 +1085,7 @@ const NAV = [
   { id:"settings",     label:"Settings",            icon:"⚙️"  },
 ];
 
-export default function GhostOpDashboard({ onExit, onSwitchToRetail }) {
+export default function GhostOpDashboard() {
   const [section, setSection] = useState("mission");
   const [apiKey, setApiKey] = useState(() => localStorage.getItem("ghost_claude_key") || "");
   const [selectedNiche, setSelectedNiche] = useState(NICHES[0]);
@@ -1134,12 +1134,7 @@ export default function GhostOpDashboard({ onExit, onSwitchToRetail }) {
         </nav>
 
         <div style={{ padding:"0.8rem 1.2rem", borderTop:`1px solid ${G.border}` }}>
-          {(onSwitchToRetail || onExit) && (
-            <button onClick={onSwitchToRetail || onExit} style={{ ...sx.btnGhost, width:"100%", fontSize:"0.75rem" }}>
-              ◈ RetailOS POS
-            </button>
-          )}
-          <div style={{ fontSize:"0.62rem", color:G.muted, marginTop:8, lineHeight:1.5 }}>
+          <div style={{ fontSize:"0.62rem", color:G.muted, lineHeight:1.5 }}>
             Ghost Operation v1.0<br/>
             All data stored locally.
           </div>
