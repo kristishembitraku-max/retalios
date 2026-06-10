@@ -1,4 +1,5 @@
 import { useState, useReducer, useEffect, useRef } from "react";
+import GhostOpDashboard from "./GhostOp";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 // ─── DATA ───────────────────────────────────────────────────────────────────
@@ -66,7 +67,7 @@ const Toast = ({ msg, type, onDone }) => {
 };
 
 // ─── LOGIN ───────────────────────────────────────────────────────────────────
-function LoginScreen({ onLogin }) {
+function LoginScreen({ onLogin, onGhostOp }) {
   const [user, setUser] = useState("admin");
   const [pass, setPass] = useState("");
   const [err, setErr] = useState("");
@@ -111,6 +112,14 @@ function LoginScreen({ onLogin }) {
             Admin: <code style={{color:C.accent}}>admin / 1234</code><br/>
             Kasier: <code style={{color:C.accent}}>kasier / 0000</code>
           </div>
+          <div style={{ marginTop:"1rem", borderTop:`1px solid ${C.border}`, paddingTop:"1rem" }}>
+            <button onClick={onGhostOp}
+              style={{ width:"100%", background:"transparent", border:`1px solid #e6394640`, borderRadius:8,
+                padding:"0.65rem", color:"#e63946", fontWeight:700, fontSize:"0.85rem", cursor:"pointer",
+                letterSpacing:"0.04em" }}>
+              👁️ Ghost Operation — Anonymous AI Income
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -119,6 +128,7 @@ function LoginScreen({ onLogin }) {
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
+  const [mode, setMode] = useState("retail"); // "retail" | "ghostop"
   const [user, setUser] = useState(null);
   const [view, setView] = useState("kasa");
   const [products, dispatch] = useReducer(productsReducer, INIT_PRODUCTS);
@@ -134,7 +144,8 @@ export default function App() {
 
   const showToast = (msg, type="success") => setToast({msg,type});
 
-  if (!user) return <LoginScreen onLogin={u=>{setUser(u); setView(u.role==="cashier"?"kasa":"kasa");}} />;
+  if (mode === "ghostop") return <GhostOpDashboard onExit={() => setMode("retail")} />;
+  if (!user) return <LoginScreen onLogin={u=>{setUser(u); setView(u.role==="cashier"?"kasa":"kasa");}} onGhostOp={() => setMode("ghostop")} />;
 
   const isAdmin = user.role === "admin";
   const cartTotal = cart.reduce((s,i) => s+i.price*i.qty, 0);
