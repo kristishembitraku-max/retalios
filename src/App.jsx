@@ -1,5 +1,4 @@
 import { useState, useReducer, useEffect, useRef } from "react";
-import GhostOpDashboard from "./GhostOp";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 // ─── DATA ───────────────────────────────────────────────────────────────────
@@ -127,8 +126,7 @@ function LoginScreen({ onLogin, onGhostOp }) {
 }
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
-export default function App() {
-  const [mode, setMode] = useState("retail"); // "retail" | "ghostop"
+export default function App({ onGhostOp }) {
   const [user, setUser] = useState(null);
   const [view, setView] = useState("kasa");
   const [products, dispatch] = useReducer(productsReducer, INIT_PRODUCTS);
@@ -144,8 +142,7 @@ export default function App() {
 
   const showToast = (msg, type="success") => setToast({msg,type});
 
-  if (mode === "ghostop") return <GhostOpDashboard onExit={() => setMode("retail")} />;
-  if (!user) return <LoginScreen onLogin={u=>{setUser(u); setView(u.role==="cashier"?"kasa":"kasa");}} onGhostOp={() => setMode("ghostop")} />;
+  if (!user) return <LoginScreen onLogin={u=>{setUser(u); setView(u.role==="cashier"?"kasa":"kasa");}} onGhostOp={onGhostOp} />;
 
   const isAdmin = user.role === "admin";
   const cartTotal = cart.reduce((s,i) => s+i.price*i.qty, 0);
