@@ -23,6 +23,7 @@
     ]
   },
   "devDependencies": {
-    "ajv": "^8.20.0"
+    "ajv": "^8.20.0",
+    "puppeteer": "^25.1.0"
   }
 }
