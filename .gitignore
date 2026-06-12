@@ -18,4 +18,5 @@ yarn-error.log*
 
 # misc
 .DS_Store
-.claude/\ntsconfig.tsbuildinfo
+.claude/
+tsconfig.tsbuildinfo
